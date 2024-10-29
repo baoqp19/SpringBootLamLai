@@ -3,7 +3,8 @@ package com.example.ProjectSpringboot.controller;
 
 import com.example.ProjectSpringboot.domain.User;
 import com.example.ProjectSpringboot.service.UserService;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -13,14 +14,13 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/user/create")
-    public String createUser(){
-        User user = new User();
-        user.setEmail("phamquocbao@gmail.com");
-        user.setName("quocbao");
-        user.setPassword("123456");
+    @PostMapping("/user/create")
+    public User createUser(@RequestBody User postUser){
 
-        this.userService.handleCreateUser(user);
-        return "create user";
+       User newUser =  this.userService.handleCreateUser(postUser);
+
+       return newUser;
     }
 }
+
+
