@@ -3,11 +3,13 @@ package com.example.ProjectSpringboot.controller;
 
 import com.example.ProjectSpringboot.domain.User;
 import com.example.ProjectSpringboot.service.UserService;
+import com.example.ProjectSpringboot.util.error.IdInvalidException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 
 @RestController
 public class UserController {
@@ -24,7 +26,11 @@ public class UserController {
     }
 
     @DeleteMapping("/user/{id}")
-    public ResponseEntity<String> deleteUser(@PathVariable("id") long id){
+    public ResponseEntity<String> deleteUser(@PathVariable("id") long id) throws
+            IdInvalidException {
+        if(id >= 1500){
+            throw new IdInvalidException("id khong lon hon 1500");
+        }
         this.userService.handleDeleteUser(id);
         return ResponseEntity.status(HttpStatus.OK).body("Xoá thành công");
     }
