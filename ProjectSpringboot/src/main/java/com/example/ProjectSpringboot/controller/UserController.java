@@ -6,6 +6,7 @@ import com.example.ProjectSpringboot.service.UserService;
 import com.example.ProjectSpringboot.util.error.IdInvalidException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,13 +15,18 @@ import java.util.List;
 @RestController
 public class UserController {
     private final UserService userService;
-    public UserController(UserService userService ){
+    private final PasswordEncoder passwordEncoder;
+    public UserController(UserService userService, PasswordEncoder passwordEncoder){
         this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @PostMapping("/user/create")
-    public ResponseEntity<User> createUser(@RequestBody User postUser){
-       User newUser =  this.userService.handleCreateUser(postUser);
+    public ResponseEntity<User> createUser(@RequestBody User postManUser){
+        String hasdPassword = this.passwordEncoder.encode(postManUser.getPassword()); // thuật toán để chuyển password
+        // sang mã hoá
+        postManUser.setPassword(hasdPassword); // ghi để mật khẩu để lưu vào database
+       User newUser =  this.userService.handleCreateUser(postManUser);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
     }
