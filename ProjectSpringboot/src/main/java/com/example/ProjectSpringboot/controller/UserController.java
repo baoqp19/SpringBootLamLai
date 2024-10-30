@@ -3,6 +3,8 @@ package com.example.ProjectSpringboot.controller;
 
 import com.example.ProjectSpringboot.domain.User;
 import com.example.ProjectSpringboot.service.UserService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,29 +17,31 @@ public class UserController {
     }
 
     @PostMapping("/user/create")
-    public User createUser(@RequestBody User postUser){
+    public ResponseEntity<User> createUser(@RequestBody User postUser){
        User newUser =  this.userService.handleCreateUser(postUser);
-       return newUser;
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
     }
 
     @DeleteMapping("/user/{id}")
-    public String deleteUser(@PathVariable("id") long id){
+    public ResponseEntity<String> deleteUser(@PathVariable("id") long id){
         this.userService.handleDeleteUser(id);
-        return "bao";
+        return ResponseEntity.status(HttpStatus.OK).body("Xoá thành công");
     }
 
     @GetMapping("/user/{id}")
-    public User getUserById(@PathVariable("id") long id){
-        return this.userService.fetchUserById(id);
+    public ResponseEntity<User> getUserById(@PathVariable("id") long id){
+        User fetchUser = this.userService.fetchUserById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(fetchUser);
     }
     @GetMapping("/user")
-    public List<User> getAllUser(){
-        return this.userService.fetchAllUser();
+    public ResponseEntity<List<User>> getAllUser(){
+        return ResponseEntity.status(HttpStatus.OK).body(this.userService.fetchAllUser());
     }
     @PutMapping("user")
-    public User updateUser(@RequestBody User user){
+    public ResponseEntity<User> updateUser(@RequestBody User user){
         User putUser = this.userService.handleUpdateUser(user);
-        return putUser;
+        return ResponseEntity.ok(putUser);
     }
 
 
