@@ -36,6 +36,9 @@ public class AuthController {
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         String access_token = this.securityUtil.createToken(authentication);
 
+        // lưu thông tin ngừi dùng đã dăng nhập vào 
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
         ResLoginDTO res = new ResLoginDTO();
 
         res.setAccessToken(access_token);

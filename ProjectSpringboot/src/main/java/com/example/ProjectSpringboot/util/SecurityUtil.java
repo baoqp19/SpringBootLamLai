@@ -33,7 +33,7 @@ public class SecurityUtil {
                 .issuedAt(now)
                 .expiresAt(validity)
                 .subject(authenticate.getName())
-                .claim("hoidanit", authenticate)
+                .claim("quocbaoit", authenticate)
                 .build();
 
         JwsHeader jwsHeader = JwsHeader.with(JW_ALGORITHM).build();
