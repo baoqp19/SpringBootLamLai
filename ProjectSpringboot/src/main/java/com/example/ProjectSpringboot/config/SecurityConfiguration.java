@@ -55,56 +55,55 @@ public class SecurityConfiguration {
                 .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults())
                         .authenticationEntryPoint(customAuthenticationEntryPoint))
 
-                .exceptionHandling(
-                        exceptions -> exceptions
-                                .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint()) // 401
-                                .accessDeniedHandler(new BearerTokenAccessDeniedHandler())) // 403
+                // .exceptionHandling(
+                    // exceptions -> exceptions
+                    // .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint()) // 401
+                    // .accessDeniedHandler(new BearerTokenAccessDeniedHandler())) // 403
 
                 .formLogin(f -> f.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         return http.build();
     }
 
-     // trong Chuỗi JWT có thêm permission và các permission hiển thị trong đó
-     @Bean
-     public JwtAuthenticationConverter jwtAuthenticationConverter() {
-         JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-         grantedAuthoritiesConverter.setAuthorityPrefix("");
-         grantedAuthoritiesConverter.setAuthoritiesClaimName("permission");
- 
-         JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
-         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
-         return jwtAuthenticationConverter;   
-     }
- 
- 
-     // mã hoá nó
-     @Bean
-     public JwtEncoder jwtEncoder() {
-         return new NimbusJwtEncoder(new ImmutableSecret<>(getSecretKey()));
-     }
- 
- 
-     // chuyển key base64 sang Secretkey (khoá bí mật)
-     private SecretKey getSecretKey() {
-         byte[] keyBytes = Base64.from(jwtKey).decode();
-         return new SecretKeySpec(keyBytes, 0, keyBytes.length,
-                 SecurityUtil.JW_ALGORITHM.getName());
-     }
- 
-     // dùng để giải mã token khi bên kia bảo vệ endpoint thì phải có cài này mới không lỗi
-     @Bean
-     public JwtDecoder jwtDecoder() {
-         NimbusJwtDecoder jwtDecoder = NimbusJwtDecoder.withSecretKey(
-                 getSecretKey()).macAlgorithm(SecurityUtil.JW_ALGORITHM).build();
-         return token -> {
-             try {
-                 return jwtDecoder.decode(token);
-             } catch (Exception e) {
-                 System.out.println(">>> JWT error: " + e.getMessage());
-                 throw e;
-             }
-         };
-     }
+    // trong Chuỗi JWT có thêm permission và các permission hiển thị trong đó
+    @Bean
+    public JwtAuthenticationConverter jwtAuthenticationConverter() {
+        JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
+        grantedAuthoritiesConverter.setAuthorityPrefix("");
+        grantedAuthoritiesConverter.setAuthoritiesClaimName("permission");
+
+        JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
+        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
+        return jwtAuthenticationConverter;
+    }
+
+    // mã hoá nó
+    @Bean
+    public JwtEncoder jwtEncoder() {
+        return new NimbusJwtEncoder(new ImmutableSecret<>(getSecretKey()));
+    }
+
+    // chuyển key base64 sang Secretkey (khoá bí mật)
+    private SecretKey getSecretKey() {
+        byte[] keyBytes = Base64.from(jwtKey).decode();
+        return new SecretKeySpec(keyBytes, 0, keyBytes.length,
+                SecurityUtil.JW_ALGORITHM.getName());
+    }
+
+    // dùng để giải mã token khi bên kia bảo vệ endpoint thì phải có cài này mới
+    // không lỗi
+    @Bean
+    public JwtDecoder jwtDecoder() {
+        NimbusJwtDecoder jwtDecoder = NimbusJwtDecoder.withSecretKey(
+                getSecretKey()).macAlgorithm(SecurityUtil.JW_ALGORITHM).build();
+        return token -> {
+            try {
+                return jwtDecoder.decode(token);
+            } catch (Exception e) {
+                System.out.println(">>> JWT error: " + e.getMessage());
+                throw e;
+            }
+        };
+    }
 
 }

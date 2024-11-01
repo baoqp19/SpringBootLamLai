@@ -1,6 +1,7 @@
 package com.example.ProjectSpringboot.config;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
@@ -20,14 +21,12 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 
     private final AuthenticationEntryPoint delegate = new BearerTokenAuthenticationEntryPoint();
 
-
     // được sử dụng để chuyển đổi giữa các đối tượng Java và định dạng JSON.
     private final ObjectMapper mapper;
 
     public CustomAuthenticationEntryPoint(ObjectMapper mapper) {
         this.mapper = mapper;
     }
-
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
@@ -39,7 +38,11 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 
         RestResponse<Object> res = new RestResponse<Object>();
         res.setStatusCode(HttpStatus.UNAUTHORIZED.value());
-        res.setError(authException.getCause().getMessage());
+
+        String orrorMessage = Optional.ofNullable(authException.getCause())
+                .map(Throwable::getMessage)
+                .orElse(authException.getMessage());
+        res.setError(orrorMessage);
 
         res.setMessage("Token không hợp lệ (hết hạn, không đúng định dạng, hoặc không truyền JWT ở header)...");
         mapper.writeValue(response.getWriter(), res);
