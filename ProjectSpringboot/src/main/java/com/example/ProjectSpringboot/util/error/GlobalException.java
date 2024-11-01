@@ -1,10 +1,7 @@
 package com.example.ProjectSpringboot.util.error;
 
-import com.example.ProjectSpringboot.domain.respone.RestResponse;
-
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -15,39 +12,45 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.example.ProjectSpringboot.domain.respone.RestResponse;
+
+// ctrl + k + s lưu hết
 @RestControllerAdvice
 public class GlobalException {
-
-    @ExceptionHandler(value = {
+    // ResponseEntity là genaric nên phải có <string>
+    @ExceptionHandler({
             IdInvalidException.class,
             UsernameNotFoundException.class,
-            BadCredentialsException.class // thông tin đăng nhập không hợp lệ
-
+            BadCredentialsException.class
     })
-    public ResponseEntity<RestResponse<Object>> handleIdException(IdInvalidException idException) {
-        RestResponse<Object> res = new RestResponse<Object>();
+    public ResponseEntity<RestResponse<Object>> handleCommonExceptions(Exception ex) {
+        RestResponse<Object> res = new RestResponse<>();
         res.setStatusCode(HttpStatus.BAD_REQUEST.value());
-        res.setError(idException.getMessage());
-        res.setMessage("Exception occurs...");
+        res.setError("Bad Request");
+        res.setMessage(ex.getMessage());
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
     }
 
-    // username or password trống notBlank và valid
+    // giá trị bị rỗng 
+    
     @ExceptionHandler(MethodArgumentNotValidException.class)
-
-    public ResponseEntity<RestResponse<Object>> validationErError(MethodArgumentNotValidException ex) {
+    public ResponseEntity<RestResponse<Object>> validationError(MethodArgumentNotValidException ex) {
         BindingResult result = ex.getBindingResult();
-        final List<FieldError> fielErrors = result.getFieldErrors();
+        List<FieldError> fieldErrors = result.getFieldErrors();
 
         RestResponse<Object> res = new RestResponse<>();
         res.setStatusCode(HttpStatus.BAD_REQUEST.value());
-        res.setError(ex.getBody().getDetail());
+        res.setError("Validation Error");
 
-        List<String> errors = fielErrors.stream().map(f -> f.getDefaultMessage()).collect(Collectors.toList());
+        // Lấy tất cả thông báo lỗi từ các field không hợp lệ
+        List<String> errors = fieldErrors.stream()
+                .map(FieldError::getDefaultMessage)
+                .collect(Collectors.toList());
+
+        // Lấy lỗi ở @Valid
         res.setMessage(errors.size() > 1 ? errors : errors.get(0));
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
     }
-
 }
