@@ -45,6 +45,7 @@ public class SecurityConfiguration {
             CustomAuthenticationEntryPoint customAuthenticationEntryPoint) throws Exception {
         http
                 .csrf(c -> c.disable())
+                .cors(Customizer.withDefaults())  // cấu hình mặc đinh cors, và thêm filter bên CorsConfig để chèn filter vào
                 .authorizeHttpRequests(
                         authz -> authz
                                 .requestMatchers("/", "/user/", "/login").permitAll()
