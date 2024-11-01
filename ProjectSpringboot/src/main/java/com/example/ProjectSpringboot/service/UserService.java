@@ -12,6 +12,7 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    
     public UserService(UserRepository userRepository){
         this.userRepository = userRepository;
     }
@@ -49,4 +50,9 @@ public class UserService {
         }
         return currentUser;
     }
+
+    public User handleGetUserByUsername(String username){
+        return this.userRepository.findByEmail(username);
+    }
+
 }
