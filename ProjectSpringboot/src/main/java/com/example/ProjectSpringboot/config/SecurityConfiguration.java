@@ -45,11 +45,12 @@ public class SecurityConfiguration {
             CustomAuthenticationEntryPoint customAuthenticationEntryPoint) throws Exception {
         http
                 .csrf(c -> c.disable())
-                .cors(Customizer.withDefaults())  // cấu hình mặc đinh cors, và thêm filter bên CorsConfig để chèn filter vào
+                .cors(Customizer.withDefaults()) // cấu hình mặc đinh cors, và thêm filter bên CorsConfig để chèn filter
+                                                 // vào
                 .authorizeHttpRequests(
                         authz -> authz
-                                .requestMatchers("/", "/api/v1/auth/login").permitAll()
-
+                                .requestMatchers("/").permitAll()
+                                .requestMatchers("/api/v1/auth/login", "/api/v1/auth/refresh").permitAll()
                                 .anyRequest().authenticated())
 
                 // thêm cái này vào để các request API đểu có token hợp lệ mới send dc
@@ -57,9 +58,9 @@ public class SecurityConfiguration {
                         .authenticationEntryPoint(customAuthenticationEntryPoint))
 
                 // .exceptionHandling(
-                    // exceptions -> exceptions
-                    // .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint()) // 401
-                    // .accessDeniedHandler(new BearerTokenAccessDeniedHandler())) // 403
+                // exceptions -> exceptions
+                // .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint()) // 401
+                // .accessDeniedHandler(new BearerTokenAccessDeniedHandler())) // 403
 
                 .formLogin(f -> f.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
