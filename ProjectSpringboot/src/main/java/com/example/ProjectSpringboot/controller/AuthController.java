@@ -1,5 +1,8 @@
 package com.example.ProjectSpringboot.controller;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -26,6 +29,9 @@ public class AuthController {
     private final SecurityUtil securityUtil;
     private final UserService userService;
 
+    @Value("${quocbaoit.jwt.refresh-token-validity-in-seconds}")
+    private long refreshTokenExpiration;
+
     public AuthController(
             AuthenticationManagerBuilder authenticationManagerBuilder,
             SecurityUtil securityUtil, UserService userService) {
@@ -42,7 +48,7 @@ public class AuthController {
 
         // xác thực người dùng => cần viết hàm loadUserByUsername
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-        String access_token = this.securityUtil.createToken(authentication);
+        String access_token = this.securityUtil.createAccessToken(authentication);
 
         // lưu thông tin ngừi dùng đã dăng nhập vào
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -58,6 +64,22 @@ public class AuthController {
         }
 
         res.setAccessToken(access_token);
-        return ResponseEntity.ok().body(res);
+
+        // create refresh token
+        String refresh_token = this.securityUtil.createRefreshToken(loginDTO.getUsername(), res);
+
+        // update user 
+        this.userService.updateUserToken(refresh_token, loginDTO.getUsername());
+
+        ResponseCookie resCookies = ResponseCookie
+                .from("refresh_token", refresh_token)
+                .httpOnly(true) // chỉ cho server của to sử dụng
+                .secure(true) // có nghĩa là cookies chỉ được sử dụng với https (http kh)
+                .path("/") // tất cả các api đều trả về cookie
+                .maxAge(refreshTokenExpiration) // thời gian hết hạn từ khi chạy
+                .build();
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, resCookies.toString())
+                .body(res);
     }
 }

@@ -34,7 +34,10 @@ public class User {
 
      private String address;
     private int age;
+
+    @Column(columnDefinition = "MEDIUMTEXT")
     private String refreshToken;
+    
     private Instant createdAt;
     private Instant updatedAt;
     private String createdBy;
@@ -48,7 +51,7 @@ public class User {
 
         this.createdAt = Instant.now();
     }
-    
+
         @PreUpdate
         public void handleBeforeUpdate() {
             this.updatedBy = SecurityUtil.getCurrentUserLogin().isPresent() == true

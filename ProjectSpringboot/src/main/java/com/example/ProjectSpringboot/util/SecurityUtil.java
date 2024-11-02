@@ -17,13 +17,20 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 
+import com.example.ProjectSpringboot.domain.respone.ResLoginDTO;
 import com.nimbusds.jose.util.Base64;
 
 @Service
 public class SecurityUtil {
 
-    @Value("${quocbaoit.jwt.token-validity-in-seconds}")
-    private long jwtExpiretion;
+    @Value("${quocbaoit.jwt.base64-secret}")
+    private String jwtKey;
+
+    @Value("${quocbaoit.jwt.access-token-validity-in-seconds}")
+    private long accessTokenExpiration;
+
+    @Value("${quocbaoit.jwt.refresh-token-validity-in-seconds}")
+    private long refreshTokenExpiration;
 
     public static final MacAlgorithm JW_ALGORITHM = MacAlgorithm.HS512;
     private final JwtEncoder jwtEncoder;
@@ -32,9 +39,9 @@ public class SecurityUtil {
         this.jwtEncoder = jwtEncoder;
     }
 
-    public String createToken(Authentication authenticate) {
+    public String createAccessToken(Authentication authenticate) {
         Instant now = Instant.now();
-        Instant validity = now.plus(this.jwtExpiretion, ChronoUnit.SECONDS);
+        Instant validity = now.plus(this.accessTokenExpiration, ChronoUnit.SECONDS);
 
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuedAt(now)
@@ -42,13 +49,14 @@ public class SecurityUtil {
                 .subject(authenticate.getName())
                 .claim("quocbaoit", authenticate)
                 .build();
-
+        
         JwsHeader jwsHeader = JwsHeader.with(JW_ALGORITHM).build();
         return this.jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader, claims)).getTokenValue();
     }
 
-   // đăng nhập thì thông tin user lưu trong token nên 2 static để giải mã token lấy ra username
-   public static Optional<String> getCurrentUserLogin() {
+    // đăng nhập thì thông tin user lưu trong token nên 2 static để giải mã token
+    // lấy ra username
+    public static Optional<String> getCurrentUserLogin() {
         SecurityContext securityContext = SecurityContextHolder.getContext();
         return Optional.ofNullable(extractPrincipal(securityContext.getAuthentication()));
     }
@@ -109,6 +117,7 @@ public class SecurityUtil {
      * @return true if the current user has none of the authorities, false
      *         otherwise.
      */
+
     // public static boolean hasCurrentUserNoneOfAuthorities(String... authorities)
     // {
     // return !hasCurrentUserAnyOfAuthorities(authorities);
@@ -126,5 +135,19 @@ public class SecurityUtil {
     // return
     // authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority);
     // }
+
+    public String createRefreshToken(String email, ResLoginDTO dto) {
+        Instant now = Instant.now();
+        Instant validity = now.plus(this.refreshTokenExpiration, ChronoUnit.SECONDS);
+        // @formatter:off
+        JwtClaimsSet claims = JwtClaimsSet.builder()
+            .issuedAt(now)
+            .expiresAt(validity)
+            .subject(email)
+            .claim("user", dto.getUser())
+            .build();
+        JwsHeader jwsHeader = JwsHeader.with(JW_ALGORITHM).build();
+        return this.jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader, claims)).getTokenValue();
+    }
 
 }
