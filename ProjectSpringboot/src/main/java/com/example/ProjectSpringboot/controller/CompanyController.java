@@ -1,7 +1,10 @@
 package com.example.ProjectSpringboot.controller;
 
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -10,9 +13,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ProjectSpringboot.domain.Company;
+import com.example.ProjectSpringboot.domain.respone.ResultPaginationDTO;
 import com.example.ProjectSpringboot.service.CompanyService;
 
 import jakarta.validation.Valid;
@@ -31,9 +36,24 @@ public class CompanyController {
     }
 
     @GetMapping("/companies")
-    public ResponseEntity<List<Company>> getCompany() {
-        List<Company> companies = this.companyService.handleGetCompany();
-        return ResponseEntity.ok(companies);
+    public ResponseEntity<ResultPaginationDTO> getCompany(
+
+            //  truyền lên Params trên postman
+            @RequestParam("current") Optional<String> currentOptional,
+            @RequestParam("pageSize") Optional<String> pageSizeOptional) {
+         
+            // lấy ra giá trị trền trên Params
+        String sCurrent = currentOptional.isPresent() ? currentOptional.get() : "";
+        String sPageSize = pageSizeOptional.isPresent() ? pageSizeOptional.get() : "";
+
+        // chuyển sang kiểu int
+        int current = Integer.parseInt(sCurrent);
+        int pageSize = Integer.parseInt(sPageSize);
+        
+
+        // thêm nó vào pageable xong nó tự tính cho mình 
+        Pageable pageable = PageRequest.of(current - 1, pageSize);
+        return ResponseEntity.ok(this.companyService.handleGetCompany(pageable));
     }
 
     @PutMapping("/companies")
