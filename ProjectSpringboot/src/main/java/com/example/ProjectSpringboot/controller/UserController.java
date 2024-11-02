@@ -4,6 +4,7 @@ import com.example.ProjectSpringboot.domain.Company;
 import com.example.ProjectSpringboot.domain.User;
 import com.example.ProjectSpringboot.domain.respone.ResultPaginationDTO;
 import com.example.ProjectSpringboot.service.UserService;
+import com.example.ProjectSpringboot.util.annotaiton.ApiMessage;
 import com.example.ProjectSpringboot.util.error.IdInvalidException;
 import com.turkraft.springfilter.boot.Filter;
 
@@ -38,6 +39,16 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
     }
 
+    
+    @GetMapping("/user")
+    @ApiMessage("fetch all users")
+    public ResponseEntity<ResultPaginationDTO> getAllUser(
+
+            @Filter Specification<User> spec, Pageable pageable) {
+        return ResponseEntity.status(HttpStatus.OK).body(this.userService.fetchAllUser(spec, pageable));
+    }
+
+
     @DeleteMapping("/user/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable("id") long id) throws IdInvalidException {
         if (id >= 1500) {
@@ -51,13 +62,6 @@ public class UserController {
     public ResponseEntity<User> getUserById(@PathVariable("id") long id) {
         User fetchUser = this.userService.fetchUserById(id);
         return ResponseEntity.status(HttpStatus.OK).body(fetchUser);
-    }
-
-    @GetMapping("/user")
-    public ResponseEntity<ResultPaginationDTO> getAllUser(
-
-            @Filter Specification<User> spec, Pageable pageable) {
-        return ResponseEntity.status(HttpStatus.OK).body(this.userService.fetchAllUser(spec, pageable));
     }
 
     @PutMapping("/user")

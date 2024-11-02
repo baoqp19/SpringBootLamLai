@@ -41,7 +41,7 @@ public class CompanyService {
 
         return rs;
     }
-
+    
     public Company handleUpdateCompany(Company c) {
         Optional<Company> companyOptional = this.companyRepository.findById(c.getId());
         if (companyOptional.isPresent()) {

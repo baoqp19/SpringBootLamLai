@@ -1,6 +1,8 @@
 package com.example.ProjectSpringboot.util;
 
 import com.example.ProjectSpringboot.domain.respone.RestResponse;
+import com.example.ProjectSpringboot.util.annotaiton.ApiMessage;
+
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
@@ -9,7 +11,6 @@ import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.http.server.ServletServerHttpResponse;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
-
 
 @ControllerAdvice
 public class FormatRestResponse implements ResponseBodyAdvice<Object> {
@@ -30,8 +31,8 @@ public class FormatRestResponse implements ResponseBodyAdvice<Object> {
 
         int status = servletResponse.getStatus();
         RestResponse<Object> res = new RestResponse<Object>();
-        
-        if ( body instanceof String) {
+
+        if (body instanceof String) {
             return body;
         }
 
@@ -39,9 +40,10 @@ public class FormatRestResponse implements ResponseBodyAdvice<Object> {
         if (status >= 400) {
             res.setError("CALL API FAILED");
             res.setMessage(body);
-        }else{
+        } else {
             res.setData(body);
-            res.setMessage("CALL API SUCCESS");
+            ApiMessage message = returnType.getMethodAnnotation(ApiMessage.class);
+            res.setMessage(message != null ? message.value() : "CALL API SUCCESS");
         }
         return res;
     }
