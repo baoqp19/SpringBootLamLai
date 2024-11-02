@@ -95,6 +95,13 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.turkraft.springfilter/jpa-example -->
+		<dependency>
+			<groupId>com.turkraft.springfilter</groupId>
+			<artifactId>jpa-example</artifactId>
+			<version>3.1.4</version>
+		</dependency>
+
 
 	</dependencies>
 

@@ -1,10 +1,10 @@
 package com.example.ProjectSpringboot.service;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.example.ProjectSpringboot.domain.Company;
@@ -24,17 +24,14 @@ public class CompanyService {
         return this.companyRepository.save(c);
     }
 
-
-    public ResultPaginationDTO handleGetCompany(Pageable pageable) {
-        
-        // thằng findAll nó sẽ trả về Page sau đó nó tự làm luôn 
-        Page<Company> pCompany = this.companyRepository.findAll(pageable);
+    public ResultPaginationDTO handleGetCompany(Specification<Company> spec, Pageable pageable) {
+        Page<Company> pCompany = this.companyRepository.findAll(spec, pageable);
 
         ResultPaginationDTO rs = new ResultPaginationDTO();
         Meta mt = new Meta();
 
-        mt.setPage(pCompany.getNumber() + 1);
-        mt.setPageSize(pCompany.getSize());
+        mt.setPage(pageable.getPageNumber() + 1);
+        mt.setPageSize(pageable.getPageSize());
 
         mt.setPages(pCompany.getTotalPages());
         mt.setTotal(pCompany.getTotalElements());
@@ -44,7 +41,6 @@ public class CompanyService {
 
         return rs;
     }
-
 
     public Company handleUpdateCompany(Company c) {
         Optional<Company> companyOptional = this.companyRepository.findById(c.getId());
