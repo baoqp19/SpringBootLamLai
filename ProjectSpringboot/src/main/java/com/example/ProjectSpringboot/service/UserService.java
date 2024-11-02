@@ -2,6 +2,9 @@ package com.example.ProjectSpringboot.service;
 
 import com.example.ProjectSpringboot.domain.User;
 import com.example.ProjectSpringboot.domain.respone.Meta;
+import com.example.ProjectSpringboot.domain.respone.ResCreateUserDTO;
+import com.example.ProjectSpringboot.domain.respone.ResUpdateUserDTO;
+import com.example.ProjectSpringboot.domain.respone.ResUserDTO;
 import com.example.ProjectSpringboot.domain.respone.ResultPaginationDTO;
 import com.example.ProjectSpringboot.repository.UserRepository;
 
@@ -12,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -39,21 +43,32 @@ public class UserService {
         return null;
     }
 
-     public ResultPaginationDTO fetchAllUser(Specification<User> spec, Pageable pageable) {
+    public ResultPaginationDTO fetchAllUser(Specification<User> spec, Pageable pageable) {
         Page<User> pageUser = this.userRepository.findAll(spec, pageable);
 
         ResultPaginationDTO rs = new ResultPaginationDTO();
         Meta mt = new Meta();
-        
+
         mt.setPage(pageable.getPageNumber() + 1);
         mt.setPageSize(pageable.getPageSize());
-        
+
         mt.setPages(pageUser.getTotalPages());
         mt.setTotal(pageUser.getTotalElements());
-        
-        
+
         rs.setMeta(mt);
-        rs.setResult(pageUser.getContent());
+        List<ResUserDTO> listUser = pageUser.getContent()
+                .stream().map(item -> new ResUserDTO(
+                        item.getId(),
+                        item.getEmail(),
+                        item.getName(),
+                        item.getGender(),
+                        item.getAddress(),
+                        item.getAge(),
+                        item.getUpdatedAt(),
+                        item.getCreatedAt()))
+                .collect(Collectors.toList());
+        rs.setResult(listUser);
+
         return rs;
     }
 
@@ -73,6 +88,46 @@ public class UserService {
 
     public User handleGetUserByUsername(String username) {
         return this.userRepository.findByEmail(username);
+    }
+
+    public boolean isEmailExist(String email) {
+        return this.userRepository.existsByEmail(email);
+    }
+
+    public ResCreateUserDTO convertToResCreateUserDTO(User user) {
+        ResCreateUserDTO res = new ResCreateUserDTO();
+        res.setId(user.getId());
+        res.setEmail(user.getEmail());
+        res.setName(user.getName());
+        res.setAge(user.getAge());
+        res.setCreatedAt(user.getCreatedAt());
+        res.setGender(user.getGender());
+        res.setAddress(user.getAddress());
+        return res;
+    }
+
+    public ResUpdateUserDTO convertToResUpdateUserDTO(User user) {
+        ResUpdateUserDTO res = new ResUpdateUserDTO();
+        res.setId(user.getId());
+        res.setName(user.getName());
+        res.setAge(user.getAge());
+        res.setUpdatedAt(user.getUpdatedAt());
+        res.setGender(user.getGender());
+        res.setAddress(user.getAddress());
+        return res;
+    }
+
+    public ResUserDTO convertToResUserDTO(User user) {
+        ResUserDTO res = new ResUserDTO();
+        res.setId(user.getId());
+        res.setEmail(user.getEmail());
+        res.setName(user.getName());
+        res.setAge(user.getAge());
+        res.setUpdatedAt(user.getUpdatedAt());
+        res.setCreatedAt(user.getCreatedAt());
+        res.setGender(user.getGender());
+        res.setAddress(user.getAddress());
+        return res;
     }
 
 }

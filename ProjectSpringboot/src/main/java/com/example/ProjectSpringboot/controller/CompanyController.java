@@ -14,17 +14,20 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ProjectSpringboot.domain.Company;
 import com.example.ProjectSpringboot.domain.respone.ResultPaginationDTO;
 import com.example.ProjectSpringboot.service.CompanyService;
+import com.example.ProjectSpringboot.util.annotaiton.ApiMessage;
 import com.turkraft.springfilter.boot.Filter;
 
 import jakarta.validation.Valid;
 
 @RestController
+@RequestMapping("/api/v1")
 public class CompanyController {
     private final CompanyService companyService;
 
@@ -38,9 +41,10 @@ public class CompanyController {
     }
 
     @GetMapping("/companies")
+    @ApiMessage("fetch all companies")
     public ResponseEntity<ResultPaginationDTO> getCompany(
             @Filter Specification<Company> spec, Pageable pageable) {
-                
+
         return ResponseEntity.ok(this.companyService.handleGetCompany(spec, pageable));
     }
 

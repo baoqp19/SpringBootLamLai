@@ -11,6 +11,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import com.example.ProjectSpringboot.domain.respone.RestResponse;
 
@@ -32,8 +33,8 @@ public class GlobalException {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
     }
 
-    // giá trị bị rỗng 
-    
+    // giá trị bị rỗng
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<RestResponse<Object>> validationError(MethodArgumentNotValidException ex) {
         BindingResult result = ex.getBindingResult();
@@ -53,4 +54,17 @@ public class GlobalException {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
     }
+
+    // 404
+    @ExceptionHandler(value = {
+            NoResourceFoundException.class,
+    })
+    public ResponseEntity<RestResponse<Object>> handleNotFoundException(Exception ex) {
+        RestResponse<Object> res = new RestResponse<Object>();
+        res.setStatusCode(HttpStatus.NOT_FOUND.value());
+        res.setError(ex.getMessage());
+        res.setMessage("404 Not Found. URL may not exist...");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
+    }
+
 }
