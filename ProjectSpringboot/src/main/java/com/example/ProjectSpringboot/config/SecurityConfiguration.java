@@ -48,7 +48,7 @@ public class SecurityConfiguration {
                 .cors(Customizer.withDefaults())  // cấu hình mặc đinh cors, và thêm filter bên CorsConfig để chèn filter vào
                 .authorizeHttpRequests(
                         authz -> authz
-                                .requestMatchers("/", "/api/v1/login").permitAll()
+                                .requestMatchers("/", "/api/v1/auth/login").permitAll()
 
                                 .anyRequest().authenticated())
 

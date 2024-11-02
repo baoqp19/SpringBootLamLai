@@ -49,7 +49,7 @@ public class SecurityUtil {
                 .subject(authenticate.getName())
                 .claim("quocbaoit", authenticate)
                 .build();
-        
+
         JwsHeader jwsHeader = JwsHeader.with(JW_ALGORITHM).build();
         return this.jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader, claims)).getTokenValue();
     }
@@ -135,6 +135,8 @@ public class SecurityUtil {
     // return
     // authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority);
     // }
+
+    
 
     public String createRefreshToken(String email, ResLoginDTO dto) {
         Instant now = Instant.now();
