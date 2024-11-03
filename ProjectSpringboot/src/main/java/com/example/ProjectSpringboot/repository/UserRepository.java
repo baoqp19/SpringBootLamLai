@@ -8,6 +8,14 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserRepository extends JpaRepository<User,Long>, JpaSpecificationExecutor<User> {
+
+    // tìm theo email
     User findByEmail(String email);
+
+    // kiểm tra xem email có trong db chưa
     boolean existsByEmail(String email);
+
+
+    // lấy token theo email 
+    User findByRefreshTokenAndEmail(String token, String email);
 }
