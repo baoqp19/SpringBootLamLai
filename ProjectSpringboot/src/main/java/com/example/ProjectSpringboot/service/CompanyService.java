@@ -1,5 +1,6 @@
 package com.example.ProjectSpringboot.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -8,16 +9,20 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.example.ProjectSpringboot.domain.Company;
+import com.example.ProjectSpringboot.domain.User;
 import com.example.ProjectSpringboot.domain.respone.Meta;
 import com.example.ProjectSpringboot.domain.respone.ResultPaginationDTO;
 import com.example.ProjectSpringboot.repository.CompanyRepository;
+import com.example.ProjectSpringboot.repository.UserRepository;
 
 @Service
 public class CompanyService {
     private final CompanyRepository companyRepository;
+    private final UserRepository userRepository;
 
-    public CompanyService(CompanyRepository companyRepository) {
+    public CompanyService(CompanyRepository companyRepository, UserRepository userRepository) {
         this.companyRepository = companyRepository;
+        this.userRepository = userRepository;
     }
 
     public Company handleCreateCompany(Company c) {
@@ -41,7 +46,7 @@ public class CompanyService {
 
         return rs;
     }
-    
+
     public Company handleUpdateCompany(Company c) {
         Optional<Company> companyOptional = this.companyRepository.findById(c.getId());
         if (companyOptional.isPresent()) {
@@ -56,6 +61,19 @@ public class CompanyService {
     }
 
     public void handleDeleteCompany(long id) {
+        // xóa công ty thì xóa user trước rồi mới xóa company
+        Optional<Company> comOptional = this.companyRepository.findById(id);
+        if (comOptional.isPresent()) {
+            Company com = comOptional.get();
+            // fetch all user belong to this company
+            List<User> users = this.userRepository.findByCompany(com);
+            this.userRepository.deleteAll(users);
+        }
+
         this.companyRepository.deleteById(id);
+    }
+
+    public Optional<Company> findById(long id) {
+        return this.companyRepository.findById(id);
     }
 }

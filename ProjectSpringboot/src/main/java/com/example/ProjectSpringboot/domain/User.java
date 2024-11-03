@@ -43,6 +43,13 @@ public class User {
     private String createdBy;
     private String updatedBy;
 
+
+    // bên user có cột company_id tượng trưng cho company ở bảng uuser
+    
+    @ManyToOne
+    @JoinColumn(name = "company_id")
+    private Company company;
+
     @PrePersist
     public void handleBeforeCreate() {
         this.createdBy = SecurityUtil.getCurrentUserLogin().isPresent() == true
