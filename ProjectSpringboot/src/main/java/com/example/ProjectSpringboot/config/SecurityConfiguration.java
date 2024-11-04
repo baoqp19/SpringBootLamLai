@@ -43,14 +43,18 @@ public class SecurityConfiguration {
     public SecurityFilterChain filterChain(
             HttpSecurity http,
             CustomAuthenticationEntryPoint customAuthenticationEntryPoint) throws Exception {
+        String[] whiteList = {
+                "/",
+                "/api/v1/auth/login", "/api/v1/auth/refresh", "/storage/**",
+                "/api/v1/companies/**", "/api/v1/jobs/**"
+        };
         http
                 .csrf(c -> c.disable())
                 .cors(Customizer.withDefaults()) // cấu hình mặc đinh cors, và thêm filter bên CorsConfig để chèn filter
                                                  // vào
                 .authorizeHttpRequests(
                         authz -> authz
-                                .requestMatchers("/").permitAll()
-                                .requestMatchers("/api/v1/auth/login", "/api/v1/auth/refresh", "/storage/**").permitAll()
+                                .requestMatchers(whiteList).permitAll()
                                 .anyRequest().authenticated())
 
                 // thêm cái này vào để các request API đểu có token hợp lệ mới send dc
