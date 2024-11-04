@@ -14,20 +14,13 @@ import java.nio.file.StandardCopyOption;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-
-import com.example.ProjectSpringboot.util.annotaiton.ApiMessage;
-import com.example.ProjectSpringboot.util.error.StorageException;
-import com.nimbusds.jose.util.Resource;
 
 @Service
 public class FileService {
 
-    @Value("${hoidanit.upload-file.base-uri}")
+    @Value("${quocbaoit.upload-file.base-uri}")
     private String baseURI;
 
     public void createDirectory(String folder) throws URISyntaxException {
@@ -58,8 +51,7 @@ public class FileService {
         return finalName;
     }
 
-
-      public long getFileLength(String fileName, String folder) throws URISyntaxException {
+    public long getFileLength(String fileName, String folder) throws URISyntaxException {
         URI uri = new URI(baseURI + folder + "/" + fileName);
         Path path = Paths.get(uri);
         File tmpDir = new File(path.toString());
@@ -68,6 +60,7 @@ public class FileService {
             return 0;
         return tmpDir.length();
     }
+
     public InputStreamResource getResource(String fileName, String folder)
             throws URISyntaxException, FileNotFoundException {
         URI uri = new URI(baseURI + folder + "/" + fileName);
@@ -75,6 +68,5 @@ public class FileService {
         File file = new File(path.toString());
         return new InputStreamResource(new FileInputStream(file));
     }
-
 
 }
