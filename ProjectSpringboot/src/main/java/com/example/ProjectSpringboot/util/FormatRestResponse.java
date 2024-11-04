@@ -5,6 +5,7 @@ import com.example.ProjectSpringboot.util.annotaiton.ApiMessage;
 
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.core.MethodParameter;
+import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
@@ -31,8 +32,9 @@ public class FormatRestResponse implements ResponseBodyAdvice<Object> {
 
         int status = servletResponse.getStatus();
         RestResponse<Object> res = new RestResponse<Object>();
-
-        if (body instanceof String) {
+        
+        // String and Resourse là upload file 
+        if (body instanceof String || body instanceof Resource) {
             return body;
         }
 
