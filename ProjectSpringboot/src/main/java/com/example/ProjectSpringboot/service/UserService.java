@@ -2,7 +2,6 @@ package com.example.ProjectSpringboot.service;
 
 import com.example.ProjectSpringboot.domain.Company;
 import com.example.ProjectSpringboot.domain.User;
-import com.example.ProjectSpringboot.domain.respone.Meta;
 import com.example.ProjectSpringboot.domain.respone.ResCreateUserDTO;
 import com.example.ProjectSpringboot.domain.respone.ResUpdateUserDTO;
 import com.example.ProjectSpringboot.domain.respone.ResUserDTO;
@@ -139,14 +138,12 @@ public class UserService {
         ResUpdateUserDTO res = new ResUpdateUserDTO();
 
         ResUpdateUserDTO.CompanyUser com = new ResUpdateUserDTO.CompanyUser();
-        
+
         if (user.getCompany() != null) {
             com.setId(user.getCompany().getId());
             com.setName(user.getCompany().getName());
             res.setCompany(com);
         }
-
-
 
         res.setId(user.getId());
         res.setName(user.getName());
@@ -166,7 +163,7 @@ public class UserService {
             com.setName(user.getCompany().getName());
             res.setCompany(com);
         }
-        
+
         res.setId(user.getId());
         res.setEmail(user.getEmail());
         res.setName(user.getName());
