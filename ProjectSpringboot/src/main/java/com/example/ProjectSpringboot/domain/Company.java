@@ -49,11 +49,14 @@ public class Company {
 
     private String updatedBy;
 
-
-    // 
+    //
     @OneToMany(mappedBy = "company", fetch = FetchType.LAZY)
     @JsonIgnore
     List<User> users;
+
+    @OneToMany(mappedBy = "company", fetch = FetchType.LAZY)
+    @JsonIgnore
+    List<Job> jobs;
 
     @PrePersist
     public void handleBeforeCreate() {

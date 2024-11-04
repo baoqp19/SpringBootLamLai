@@ -45,8 +45,8 @@ public class SecurityConfiguration {
             CustomAuthenticationEntryPoint customAuthenticationEntryPoint) throws Exception {
         String[] whiteList = {
                 "/",
-                "/api/v1/auth/login", "/api/v1/auth/refresh", "/storage/**",
-                "/api/v1/companies/**", "/api/v1/jobs/**"
+                "/api/v1/auth/login", "/api/v1/auth/refresh", "/api/v1/auth/register",
+                "/storage/**",
         };
         http
                 .csrf(c -> c.disable())
@@ -55,6 +55,10 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(
                         authz -> authz
                                 .requestMatchers(whiteList).permitAll()
+
+                                .requestMatchers(HttpMethod.GET, "/api/v1/companies").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/v1/jobs").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/v1/skills").permitAll()
                                 .anyRequest().authenticated())
 
                 // thêm cái này vào để các request API đểu có token hợp lệ mới send dc

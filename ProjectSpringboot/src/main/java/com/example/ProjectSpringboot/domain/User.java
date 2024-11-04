@@ -1,6 +1,5 @@
 package com.example.ProjectSpringboot.domain;
 
-
 import java.time.Instant;
 import java.util.List;
 
@@ -16,10 +15,10 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table(name="users")
+@Table(name = "users")
 public class User {
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @NotBlank(message = "name không được để trống")
@@ -34,20 +33,19 @@ public class User {
     @Enumerated(EnumType.STRING)
     private GenderEnum gender;
 
-     private String address;
+    private String address;
     private int age;
 
     @Column(columnDefinition = "MEDIUMTEXT")
     private String refreshToken;
-    
+
     private Instant createdAt;
     private Instant updatedAt;
     private String createdBy;
     private String updatedBy;
 
-
     // bên user có cột company_id tượng trưng cho company ở bảng uuser
-    
+
     @ManyToOne
     @JoinColumn(name = "company_id")
     private Company company;
@@ -56,6 +54,9 @@ public class User {
     @JsonIgnore
     List<Resume> resumes;
 
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    private Role role;
 
     @PrePersist
     public void handleBeforeCreate() {
@@ -66,11 +67,11 @@ public class User {
         this.createdAt = Instant.now();
     }
 
-        @PreUpdate
-        public void handleBeforeUpdate() {
-            this.updatedBy = SecurityUtil.getCurrentUserLogin().isPresent() == true
-                    ? SecurityUtil.getCurrentUserLogin().get()
-                    : "";
+    @PreUpdate
+    public void handleBeforeUpdate() {
+        this.updatedBy = SecurityUtil.getCurrentUserLogin().isPresent() == true
+                ? SecurityUtil.getCurrentUserLogin().get()
+                : "";
         this.updatedAt = Instant.now();
     }
 }

@@ -83,4 +83,6 @@ public class JobController {
             Pageable pageable) {
         return ResponseEntity.ok().body(this.jobService.fetchAll(spec, pageable));
     }
+
+    
 }
