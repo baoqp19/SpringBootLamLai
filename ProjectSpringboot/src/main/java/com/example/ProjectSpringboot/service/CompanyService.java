@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import com.example.ProjectSpringboot.domain.Company;
 import com.example.ProjectSpringboot.domain.User;
-import com.example.ProjectSpringboot.domain.respone.Meta;
 import com.example.ProjectSpringboot.domain.respone.ResultPaginationDTO;
 import com.example.ProjectSpringboot.repository.CompanyRepository;
 import com.example.ProjectSpringboot.repository.UserRepository;
