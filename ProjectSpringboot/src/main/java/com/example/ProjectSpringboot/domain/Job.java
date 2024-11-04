@@ -6,6 +6,7 @@ import java.util.List;
 import com.example.ProjectSpringboot.util.SecurityUtil;
 import com.example.ProjectSpringboot.util.constant.LevelEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -67,7 +68,7 @@ public class Job {
     // 1 job có nhiều skill và 1 Skill có nhiều job quan ManyToMany bỏ bên skill or
     // job gi cũng dcdc
     @ManyToMany(fetch = FetchType.LAZY)
-    @JsonIgnore
+    @JsonIgnoreProperties(value = { "jobs" }) 
     @JoinTable(name = "job_skill", joinColumns = @JoinColumn(name = "job_id"), inverseJoinColumns = @JoinColumn(name = "skill_id"))
     private List<Skill> skills; // lấy mappby ở skills
 
