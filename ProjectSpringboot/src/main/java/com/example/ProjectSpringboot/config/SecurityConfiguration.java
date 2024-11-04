@@ -50,7 +50,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(
                         authz -> authz
                                 .requestMatchers("/").permitAll()
-                                .requestMatchers("/api/v1/auth/login", "/api/v1/auth/refresh").permitAll()
+                                .requestMatchers("/api/v1/auth/login", "/api/v1/auth/refresh", "/storage/**").permitAll()
                                 .anyRequest().authenticated())
 
                 // thêm cái này vào để các request API đểu có token hợp lệ mới send dc
