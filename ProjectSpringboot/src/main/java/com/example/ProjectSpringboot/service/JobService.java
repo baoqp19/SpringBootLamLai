@@ -11,9 +11,9 @@ import org.springframework.stereotype.Service;
 
 import com.example.ProjectSpringboot.domain.Job;
 import com.example.ProjectSpringboot.domain.Skill;
-import com.example.ProjectSpringboot.domain.respone.ResCreateJobDTO;
 import com.example.ProjectSpringboot.domain.respone.ResUpdateJobDTO;
 import com.example.ProjectSpringboot.domain.respone.ResultPaginationDTO;
+import com.example.ProjectSpringboot.domain.respone.job.ResCreateJobDTO;
 import com.example.ProjectSpringboot.repository.JobRepository;
 import com.example.ProjectSpringboot.repository.SkillRepository;
 

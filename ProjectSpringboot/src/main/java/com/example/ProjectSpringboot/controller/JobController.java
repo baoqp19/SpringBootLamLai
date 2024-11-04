@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ProjectSpringboot.domain.Job;
-import com.example.ProjectSpringboot.domain.respone.ResCreateJobDTO;
 import com.example.ProjectSpringboot.domain.respone.ResUpdateJobDTO;
 import com.example.ProjectSpringboot.domain.respone.ResultPaginationDTO;
+import com.example.ProjectSpringboot.domain.respone.job.ResCreateJobDTO;
 import com.example.ProjectSpringboot.service.JobService;
 import com.example.ProjectSpringboot.util.annotaiton.ApiMessage;
 import com.example.ProjectSpringboot.util.error.IdInvalidException;

@@ -1,4 +1,4 @@
-package com.example.ProjectSpringboot.domain.respone;
+package com.example.ProjectSpringboot.domain.respone.job;
 
 import java.time.Instant;
 import java.util.List;
