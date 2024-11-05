@@ -12,7 +12,6 @@ import com.example.ProjectSpringboot.domain.respone.ResultPaginationDTO;
 import com.example.ProjectSpringboot.repository.JobRepository;
 import com.example.ProjectSpringboot.repository.SkillRepository;
 
-
 @Service
 public class SkillService {
 
@@ -48,7 +47,7 @@ public class SkillService {
         // delete job (inside job_skill table)
         Optional<Skill> skillOptional = this.skillRepository.findById(id);
         Skill currentSkill = skillOptional.get();
-        currentSkill.getJobs().forEach(job -> job.getSkills().remove(currentSkill));
+        currentSkill.getSubscribers().forEach(subs -> subs.getSkills().remove(currentSkill));
         // delete skill
         this.skillRepository.delete(currentSkill);
     }
