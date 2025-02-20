@@ -40,10 +40,10 @@ public class SubscriberService {
     }
 
     // 10s chay 1 lan
-     @Scheduled(cron = "*/10 * * * * *")
-     public void testCron() {
-     System.out.println(">>> TEST CRON");
-     }
+    //  @Scheduled(cron = "*/10 * * * * *")
+    //  public void testCron() {
+    // //  System.out.println(">>> TEST CRON");
+    //  }
 
 
     public Subscriber create(Subscriber subs) {

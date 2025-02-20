@@ -1,5 +1,6 @@
 package com.example.ProjectSpringboot.domain.respone;
 
+import com.example.ProjectSpringboot.domain.Role;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -11,12 +12,11 @@ import lombok.Setter;
 @Getter
 public class ResLoginDTO {
 
-    // thay đổi tên hiển thị trong JSON 
-    @JsonProperty("access_token")    
+    // thay đổi tên hiển thị trong JSON
+    @JsonProperty("access_token")
     private String accessToken;
 
     private UserLogin user;
-
 
     // static nha
     @Getter
@@ -27,6 +27,7 @@ public class ResLoginDTO {
         private long id;
         private String email;
         private String name;
+        private Role role;
 
     }
 
@@ -34,7 +35,7 @@ public class ResLoginDTO {
     @Setter
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class UserGetAccount{
+    public static class UserGetAccount {
         private UserLogin user;
     }
 }
