@@ -8,7 +8,7 @@
 
 
 
-#### 1. Docker-compose 
+#### 3. Docker-compose 
 
 - Xóa tất cả container chạy theo compose:
     ```text
