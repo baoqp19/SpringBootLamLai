@@ -31,3 +31,5 @@ build/
 
 ### VS Code ###
 .vscode/
+ProjectSpringboot/db/mysql.sock
+*.sock
