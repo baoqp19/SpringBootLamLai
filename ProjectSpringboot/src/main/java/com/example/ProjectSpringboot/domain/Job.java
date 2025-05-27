@@ -55,7 +55,7 @@ public class Job {
 
     @Column(columnDefinition = "MEDIUMTEXT")
     private String description;
-
+    
     private Instant startDate;
 
     private Instant endDate;
