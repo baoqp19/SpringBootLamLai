@@ -4,11 +4,13 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -24,9 +26,14 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.stereotype.Service;
 
 import com.example.ProjectSpringboot.domain.respone.ResLoginDTO;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.jose.util.Base64;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class SecurityUtil {
 
     @Value("${quocbaoit.jwt.base64-secret}")
@@ -45,6 +52,9 @@ public class SecurityUtil {
         this.jwtEncoder = jwtEncoder;
     }
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     public String createAccessToken(String email, ResLoginDTO.UserLogin dto) {
         Instant now = Instant.now();
         Instant validity = now.plus(this.accessTokenExpiration, ChronoUnit.SECONDS);
@@ -54,11 +64,14 @@ public class SecurityUtil {
         listAuthority.add("ROLE_USER_CREATE");
         listAuthority.add("ROLE_USER_UPDATE");
 
+        Map<String, Object> userMap = objectMapper.convertValue(dto, new TypeReference<Map<String, Object>>() {
+        });
+
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuedAt(now)
                 .expiresAt(validity)
                 .subject(email)
-                .claim("user", dto) // thêm bao nhiêu cái .claim cũng dc
+                .claim("user", userMap) // thêm bao nhiêu cái .claim cũng dc
                 .claim("permission", listAuthority)
                 .build();
 
@@ -151,35 +164,39 @@ public class SecurityUtil {
     public String createRefreshToken(String email, ResLoginDTO dto) {
         Instant now = Instant.now();
         Instant validity = now.plus(this.refreshTokenExpiration, ChronoUnit.SECONDS);
-        // @formatter:off
+
+        // Chuyển object thành Map để tránh lỗi serialize Instant
+        Map<String, Object> userMap = objectMapper.convertValue(dto.getUser(), new TypeReference<>() {
+        });
+
         JwtClaimsSet claims = JwtClaimsSet.builder()
-            .issuedAt(now)
-            .expiresAt(validity)
-            .subject(email)
-            .claim("user", dto.getUser())
-            .build();
+                .issuedAt(now)
+                .expiresAt(validity)
+                .subject(email)
+                .claim("user", userMap)
+                .build();
+
         JwsHeader jwsHeader = JwsHeader.with(JW_ALGORITHM).build();
         return this.jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader, claims)).getTokenValue();
     }
 
-    //  khi có refesh_token thì thêm 2 cái dưới
+    // khi có refesh_token thì thêm 2 cái dưới
 
-      private SecretKey getSecretKey() {
+    private SecretKey getSecretKey() {
         byte[] keyBytes = Base64.from(jwtKey).decode();
         return new SecretKeySpec(keyBytes, 0, keyBytes.length,
                 JW_ALGORITHM.getName());
-        }
+    }
 
-
-    public Jwt checkValidRefreshToken(String token){
-     NimbusJwtDecoder jwtDecoder = NimbusJwtDecoder.withSecretKey(
+    public Jwt checkValidRefreshToken(String token) {
+        NimbusJwtDecoder jwtDecoder = NimbusJwtDecoder.withSecretKey(
                 getSecretKey()).macAlgorithm(SecurityUtil.JW_ALGORITHM).build();
-                try {
-                     return jwtDecoder.decode(token);
-                } catch (Exception e) {
-                    System.out.println(">>> Refresh Token error: " + e.getMessage());
-                    throw e;
-                }
+        try {
+            return jwtDecoder.decode(token);
+        } catch (Exception e) {
+            System.out.println(">>> Refresh Token error: " + e.getMessage());
+            throw e;
+        }
     }
 
 }
