@@ -3,6 +3,7 @@ package com.example.ProjectSpringboot.util;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -30,10 +31,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.jose.util.Base64;
 
-import lombok.extern.slf4j.Slf4j;
-
 @Service
-@Slf4j
 public class SecurityUtil {
 
     @Value("${quocbaoit.jwt.base64-secret}")
@@ -64,8 +62,10 @@ public class SecurityUtil {
         listAuthority.add("ROLE_USER_CREATE");
         listAuthority.add("ROLE_USER_UPDATE");
 
-        Map<String, Object> userMap = objectMapper.convertValue(dto, new TypeReference<Map<String, Object>>() {
-        });
+        Map<String, Object> userMap = new HashMap<>();
+        userMap.put("id", dto.getId());
+        userMap.put("email", dto.getEmail());
+        userMap.put("name", dto.getName());
 
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuedAt(now)
@@ -166,8 +166,14 @@ public class SecurityUtil {
         Instant validity = now.plus(this.refreshTokenExpiration, ChronoUnit.SECONDS);
 
         // Chuyển object thành Map để tránh lỗi serialize Instant
-        Map<String, Object> userMap = objectMapper.convertValue(dto.getUser(), new TypeReference<>() {
-        });
+        // Map<String, Object> userMap = objectMapper.convertValue(dto.getUser(), new
+        // TypeReference<>() {
+        // });
+
+        Map<String, Object> userMap = new HashMap<>();
+        userMap.put("id", dto.getUser().getId());
+        userMap.put("email", dto.getUser().getEmail());
+        userMap.put("name", dto.getUser().getName());
 
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuedAt(now)
