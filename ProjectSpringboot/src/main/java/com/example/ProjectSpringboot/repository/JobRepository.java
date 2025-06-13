@@ -8,6 +8,9 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import com.example.ProjectSpringboot.domain.Job;
 import com.example.ProjectSpringboot.domain.Skill;
 
-public interface JobRepository extends JpaRepository<Job, Long>, JpaSpecificationExecutor<Job>  {
+public interface JobRepository extends JpaRepository<Job, Long>, JpaSpecificationExecutor<Job> {
      List<Job> findBySkillsIn(List<Skill> skills);
 }
+
+
+

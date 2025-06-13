@@ -52,15 +52,14 @@ public class PermissionInterceptor implements HandlerInterceptor {
                 Role role = user.getRole();
                 if (role != null) {
                     List<Permission> permissions = role.getPermissions();
-                    boolean isAllow = permissions.stream().anyMatch(item -> item.getApiPath().equals(path)
-                            && item.getMethod().equals(httpMethod));
+                    boolean isAllow = permissions.stream().anyMatch(item -> item.getMethod().equals(httpMethod));
 
                     if (isAllow == false) {
-                        throw new PermissionException("Bạn không có quyền truy cập endpoint này.");
+                        throw new PermissionException("Bạn không có quyền truy cập endpoint này1 .");
                     }
-                    
+
                 } else {
-                    throw new PermissionException("Bạn không có quyền truy cập endpoint này.");
+                    throw new PermissionException("Bạn không có quyền truy cập endpoint này22.");
                 }
             }
         }

@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.example.ProjectSpringboot.util.SecurityUtil;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.gson.annotations.JsonAdapter;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -53,6 +54,7 @@ public class Permission {
 
     private Instant createdAt;
     private Instant updatedAt;
+
     private String createdBy;
     private String updatedBy;
 
@@ -75,4 +77,6 @@ public class Permission {
                 : "";
         this.updatedAt = Instant.now();
     }
+
+    
 }

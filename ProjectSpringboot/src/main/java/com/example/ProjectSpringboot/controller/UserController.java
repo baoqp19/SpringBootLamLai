@@ -1,6 +1,5 @@
 package com.example.ProjectSpringboot.controller;
 
-import com.example.ProjectSpringboot.domain.Company;
 import com.example.ProjectSpringboot.domain.User;
 import com.example.ProjectSpringboot.domain.respone.ResCreateUserDTO;
 import com.example.ProjectSpringboot.domain.respone.ResUpdateUserDTO;
@@ -18,12 +17,12 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.bind.annotation.*;   
 
 @RestController
 @RequestMapping("/api/v1")
 public class UserController {
+
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
 
@@ -32,15 +31,18 @@ public class UserController {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @PostMapping("/user/create")
+    @PostMapping("/users")
     @ApiMessage("Create a new user")
     public ResponseEntity<ResCreateUserDTO> createNewUser(@Valid @RequestBody User postManUser)
             throws IdInvalidException {
+
         boolean isEmailExits = this.userService.isEmailExist(postManUser.getEmail());
+
         if (isEmailExits) {
             throw new IdInvalidException(
                     "Email " + postManUser.getEmail() + " đã tồn tại, vui lòng sử dụng email khác.");
         }
+
         String hasdPassword = this.passwordEncoder.encode(postManUser.getPassword()); // thuật toán để chuyển password
         // sang mã hoá
         postManUser.setPassword(hasdPassword); // ghi để mật khẩu để lưu vào database
@@ -49,7 +51,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(this.userService.convertToResCreateUserDTO(newUser));
     }
 
-    @GetMapping("/user")
+    @GetMapping("/users")
     @ApiMessage("fetch all users")
     public ResponseEntity<ResultPaginationDTO> getAllUser(
 
@@ -57,7 +59,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(this.userService.fetchAllUser(spec, pageable));
     }
 
-    @DeleteMapping("/user/{id}")
+    @DeleteMapping("/users/{id}")
     @ApiMessage("Delete a user")
     public ResponseEntity<Void> deleteUser(@PathVariable("id") long id) throws IdInvalidException {
         User currentUser = this.userService.fetchUserById(id);
@@ -68,7 +70,7 @@ public class UserController {
         return ResponseEntity.ok(null);
     }
 
-    @GetMapping("/user/{id}")
+    @GetMapping("/users/{id}")
     @ApiMessage("fetch user by id")
     public ResponseEntity<ResUserDTO> getUserById(@PathVariable("id") long id) throws IdInvalidException {
         User fetchUser = this.userService.fetchUserById(id);
@@ -78,7 +80,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(this.userService.convertToResUserDTO(fetchUser));
     }
 
-    @PutMapping("/user")
+    @PutMapping("/users")
     @ApiMessage("Update a user")
     public ResponseEntity<ResUpdateUserDTO> updateUser(@RequestBody User user) throws IdInvalidException {
         User putUser = this.userService.handleUpdateUser(user);

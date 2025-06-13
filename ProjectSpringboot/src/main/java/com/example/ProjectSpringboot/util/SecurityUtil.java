@@ -26,6 +26,7 @@ import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.stereotype.Service;
 
+import com.example.ProjectSpringboot.domain.Role;
 import com.example.ProjectSpringboot.domain.respone.ResLoginDTO;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -66,6 +67,7 @@ public class SecurityUtil {
         userMap.put("id", dto.getId());
         userMap.put("email", dto.getEmail());
         userMap.put("name", dto.getName());
+        // userMap.put("role", dto.getRole().getName());
 
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuedAt(now)
@@ -170,10 +172,16 @@ public class SecurityUtil {
         // TypeReference<>() {
         // });
 
+        Role role = dto.getUser().getRole();
+        Map<String, Object> roleMap = new HashMap<>();
+        roleMap.put("id", role.getId());
+        roleMap.put("name", role.getName());
+
         Map<String, Object> userMap = new HashMap<>();
         userMap.put("id", dto.getUser().getId());
         userMap.put("email", dto.getUser().getEmail());
         userMap.put("name", dto.getUser().getName());
+        // userMap.put("role", dto.getUser().getRole());
 
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuedAt(now)

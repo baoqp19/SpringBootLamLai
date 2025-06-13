@@ -19,7 +19,8 @@ import com.example.ProjectSpringboot.domain.respone.RestResponse;
 @RestControllerAdvice
 public class GlobalException {
 
-     // xử lý sự kiện mà chưa có Exception ví dụ như gửi email, nếu truyền lên sai thì nó sẽ chạy vào Excepsion này
+    // xử lý sự kiện mà chưa có Exception ví dụ như gửi email, nếu truyền lên sai
+    // thì nó sẽ chạy vào Excepsion này
     // handle all exception
     @ExceptionHandler(Exception.class)
     public ResponseEntity<RestResponse<Object>> handleAllException(Exception ex) {
@@ -30,7 +31,6 @@ public class GlobalException {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(res);
     }
 
-    
     // ResponseEntity là genaric nên phải có <string>
     @ExceptionHandler({
             IdInvalidException.class,
@@ -81,18 +81,18 @@ public class GlobalException {
     }
 
     @ExceptionHandler(value = {
-        StorageException.class,
+            StorageException.class,
     })
     public ResponseEntity<RestResponse<Object>> handleFileUploadException(Exception ex) {
-    RestResponse<Object> res = new RestResponse<Object>();
-    res.setStatusCode(HttpStatus.BAD_REQUEST.value());
-    res.setError(ex.getMessage());
-    res.setMessage("Exception upload file...");
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
+        RestResponse<Object> res = new RestResponse<Object>();
+        res.setStatusCode(HttpStatus.BAD_REQUEST.value());
+        res.setError(ex.getMessage());
+        res.setMessage("Exception upload file...");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
     }
 
     @ExceptionHandler(value = {
-        PermissionException.class,
+            PermissionException.class,
     })
     public ResponseEntity<RestResponse<Object>> handlePermissionException(Exception ex) {
         RestResponse<Object> res = new RestResponse<Object>();

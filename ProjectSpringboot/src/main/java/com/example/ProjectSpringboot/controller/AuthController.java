@@ -104,7 +104,7 @@ public class AuthController {
         String email = SecurityUtil.getCurrentUserLogin().isPresent()
                 ? SecurityUtil.getCurrentUserLogin().get()
                 : "";
-
+    
         // từ email đó thì lấy ra user login
         User currentUserDB = this.userService.handleGetUserByUsername(email);
 
@@ -116,6 +116,7 @@ public class AuthController {
             userLogin.setId(currentUserDB.getId());
             userLogin.setEmail(currentUserDB.getEmail());
             userLogin.setName(currentUserDB.getName());
+            userLogin.setRole(currentUserDB.getRole());
             userGetAccount.setUser(userLogin);
         }
 

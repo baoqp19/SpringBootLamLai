@@ -2,10 +2,10 @@ package com.example.ProjectSpringboot.domain;
 
 import java.time.Instant;
 import java.util.List;
-
 import com.example.ProjectSpringboot.util.SecurityUtil;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.google.gson.annotations.JsonAdapter;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -37,8 +37,10 @@ public class Role {
 
     private String description;
     private boolean active;
+
     private Instant createdAt;
     private Instant updatedAt;
+
     private String createdBy;
     private String updatedBy;
 
@@ -64,7 +66,6 @@ public class Role {
         this.createdBy = SecurityUtil.getCurrentUserLogin().isPresent() == true
                 ? SecurityUtil.getCurrentUserLogin().get()
                 : "";
-
         this.createdAt = Instant.now();
     }
 
@@ -73,7 +74,6 @@ public class Role {
         this.updatedBy = SecurityUtil.getCurrentUserLogin().isPresent() == true
                 ? SecurityUtil.getCurrentUserLogin().get()
                 : "";
-
         this.updatedAt = Instant.now();
     }
 

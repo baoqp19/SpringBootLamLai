@@ -37,10 +37,8 @@ public class Job {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-
     @NotBlank(message = "Name không được để trống")
     private String name;
-
 
     @NotBlank(message = "location không được để trống")
     private String location;
@@ -49,18 +47,18 @@ public class Job {
 
     private int quantity;
 
-
     @Enumerated(EnumType.STRING)
     private LevelEnum level;
 
     @Column(columnDefinition = "MEDIUMTEXT")
     private String description;
-    
+
     private Instant startDate;
 
     private Instant endDate;
 
-    private boolean isActive;
+    private boolean active = true;
+    private boolean isActive = false;
 
     private Instant createdAt;
 
@@ -82,7 +80,7 @@ public class Job {
     // 1 job có nhiều skill và 1 Skill có nhiều job quan ManyToMany bỏ bên skill or
     // job gi cũng dcdc
     @ManyToMany(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties(value = { "jobs" }) 
+    @JsonIgnoreProperties(value = { "jobs" })
     @JoinTable(name = "job_skill", joinColumns = @JoinColumn(name = "job_id"), inverseJoinColumns = @JoinColumn(name = "skill_id"))
     private List<Skill> skills; // lấy mappby ở skills
 
