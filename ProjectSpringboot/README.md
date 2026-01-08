@@ -1,52 +1,99 @@
-#### 1. Bảo vệ Endpoint Là thêm Token vào các API để client có thể lấy 
+#### 1. Bảo vệ Endpoint Là thêm Token vào các API để client có thể lấy
 
+#### 2. Skill endpoint khong co delete skill vi bi loi, thì ta xóa job thì xóa cả skill những xóa skill thì job nó lỗi
 
-#### 2. Skill endpoint khong co delete skill vi bi loi, thì ta xóa job thì xóa cả skill những xóa skill thì job nó lỗi 
-
-
-
-
-
-
-#### 3. Docker-compose 
+#### 3. Docker-compose
 
 - Xóa tất cả container chạy theo compose:
-    ```text
-    docker-compose down
-    ```
 
-- Khởi động lại container đã build: 
-    ```text
-    # Chạy container đã build 
-    docker-compose up -d  
-    # Build lại và chạy container 
-    docker-compose up -d --build 
-    ```
+  ```text
+  docker-compose down
+  ```
 
-- Build docker image từ dockerfile : 
-    ```text
-    docker build -t <tên-image>:<tag> <đường-dẫn-tới-Dockerfile>
+- Khởi động lại container đã build:
 
-    docker build: build image
-    -t project-springboot: đặt tên image
+  ```text
+  # Chạy container đã build
+  docker-compose up -d
+  # Build lại và chạy container
+  docker-compose up -d --build
+  ```
 
-    .: dùng Dockerfile trong thư mục hiện tại
-    
-    docker build -t project-springboot .
+- Build docker image từ dockerfile :
 
-    ```
+  ```text
+  docker build -t <tên-image>:<tag> <đường-dẫn-tới-Dockerfile>
 
-- Run docker container từ image:  
-    ```text
-    docker run -d -p 8080:80 <ten-image>
+  docker build: build image
+  -t project-springboot: đặt tên image
 
-    ```
+  .: dùng Dockerfile trong thư mục hiện tại
 
-- Build từ docker-compose and run application:   
-    ```text 
-    # v volume 
-    docker-compose down -v 
-    # build 
-    docker-compose up -d --build 
-    ```
+  docker build -t project-springboot .
 
+  ```
+
+- Run docker container từ image:
+
+  ```text
+  docker run -d -p 8080:80 <ten-image>
+
+  docker run -d -p 8080:8080 --name springboot-app project-springboot
+
+  -d: chạy nền (detached)
+
+  -p 8080:8080: map port
+
+  máy bạn: localhost:8080
+
+  container: 8080
+
+  --name springboot-app: đặt tên container
+
+  ```
+
+- Build từ docker-compose and run application:
+
+  ```text
+  # v volume
+  docker-compose down -v
+  # build
+  docker-compose up -d --build
+  ```
+
+- Build từ docker-compose and run application:
+
+```text
+    docker exec -it mysqldb mysql -u root -p
+
+    docker exec: chạy lệnh bên trong docker đang chạy
+    -it : để dùng tương tác như show database, show tables;
+    mysqldb là tên container
+    mysql -u root -p: để vào MySQL shell
+```
+
+- See database:
+
+```text
+    SHOW DATABASES;
+    USE jobsearch;
+    SHOW TABLES;
+    SELECT * FROM ten_bang;
+```
+
+- off container:
+
+```text
+    docker stop springbootapp
+    docker stop mysqldb
+```
+
+- stop container vs docker-compose.yml 
+```text
+    docker compose stop
+
+```
+- Dừng + xoá container + xoá volume (xoá data MySQL) 
+```text
+    docker compose down -v
+```
