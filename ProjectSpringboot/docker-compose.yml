@@ -19,7 +19,8 @@ services:
 
   spring-boot-app:
     container_name: springbootapp
-    # build . dockerfile cùng cấp và Name: thư mục chứa compose_tên service 
+
+    # build Dockerfile in the current directory 
     build: .   
     restart: always
     ports:

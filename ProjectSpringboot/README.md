@@ -97,3 +97,9 @@
 ```text
     docker compose down -v
 ```
+
+- Xoá docker image vs docker container 
+```text
+    docker rmi <name_docker_image>
+    docker rm <name_docker_container>
+```
