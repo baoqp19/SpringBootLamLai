@@ -77,6 +77,7 @@ public class FileController {
         }
         // download a file
         InputStreamResource resource = this.fileService.getResource(fileName, folder);
+        
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
                 .contentLength(fileLength)

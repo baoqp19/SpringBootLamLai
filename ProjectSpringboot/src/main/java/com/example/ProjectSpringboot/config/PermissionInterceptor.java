@@ -13,7 +13,6 @@ import com.example.ProjectSpringboot.domain.Role;
 import com.example.ProjectSpringboot.domain.User;
 import com.example.ProjectSpringboot.service.UserService;
 import com.example.ProjectSpringboot.util.SecurityUtil;
-import com.example.ProjectSpringboot.util.error.IdInvalidException;
 import com.example.ProjectSpringboot.util.error.PermissionException;
 
 import jakarta.servlet.http.HttpServletRequest;

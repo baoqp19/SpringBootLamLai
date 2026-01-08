@@ -49,8 +49,8 @@ public class Company {
 
     private String updatedBy;
 
-    //
-    @OneToMany(mappedBy = "company", fetch = FetchType.LAZY)
+    // có fetch không gọi thì nó không hiện 
+    @OneToMany(mappedBy = "company", fetch = FetchType.LAZY) 
     @JsonIgnore
     List<User> users;
 

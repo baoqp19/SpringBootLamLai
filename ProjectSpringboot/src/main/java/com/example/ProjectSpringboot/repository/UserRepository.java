@@ -1,6 +1,5 @@
 package com.example.ProjectSpringboot.repository;
 
-
 import com.example.ProjectSpringboot.domain.Company;
 import com.example.ProjectSpringboot.domain.User;
 
@@ -11,7 +10,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepository extends JpaRepository<User,Long>, JpaSpecificationExecutor<User> {
+public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor<User> {
 
     // tìm theo email
     User findByEmail(String email);
@@ -19,11 +18,9 @@ public interface UserRepository extends JpaRepository<User,Long>, JpaSpecificati
     // kiểm tra xem email có trong db chưa
     boolean existsByEmail(String email);
 
-
-    // lấy token theo email 
+    // Cách viết đúng nhất
     User findByRefreshTokenAndEmail(String token, String email);
 
-
-    // lấy ra user thuộc công ty
+    // lấy ra user thuộc công ty // có thuộc tính nên lấy ra dc
     List<User> findByCompany(Company company);
 }

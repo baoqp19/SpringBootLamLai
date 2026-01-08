@@ -42,12 +42,16 @@ public class RoleService {
         }
         return this.roleRepository.save(r);
     }
+
+
     public Role fetchById(long id) {
         Optional<Role> roleOptional = this.roleRepository.findById(id);
         if (roleOptional.isPresent())
             return roleOptional.get();
         return null;
     }
+
+
     public Role update(Role r) {
         Role roleDB = this.fetchById(r.getId());
         // check permissions
@@ -65,17 +69,25 @@ public class RoleService {
         roleDB = this.roleRepository.save(roleDB);
         return roleDB;
     }
+
     public void delete(long id) {
         this.roleRepository.deleteById(id);
     }
+
+
     public ResultPaginationDTO getRoles(Specification<Role> spec, Pageable pageable) {
+
         Page<Role> pRole = this.roleRepository.findAll(spec, pageable);
+
         ResultPaginationDTO rs = new ResultPaginationDTO();
+
         ResultPaginationDTO.Meta mt = new ResultPaginationDTO.Meta();
         mt.setPage(pageable.getPageNumber() + 1);
         mt.setPageSize(pageable.getPageSize());
+
         mt.setPages(pRole.getTotalPages());
         mt.setTotal(pRole.getTotalElements());
+        
         rs.setMeta(mt);
         rs.setResult(pRole.getContent());
         return rs;

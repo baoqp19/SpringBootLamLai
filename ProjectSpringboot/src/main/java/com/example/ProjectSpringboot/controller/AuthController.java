@@ -53,8 +53,9 @@ public class AuthController {
     @PostMapping("/auth/login")
     public ResponseEntity<ResLoginDTO> login(@Valid @RequestBody LoginDTO loginDTO) {
         // nạp input gồm username/password vào Security
+
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                loginDTO.getUsername(), loginDTO.getPassword());
+                loginDTO.getEmail(), loginDTO.getPassword());
 
         // xác thực người dùng => cần viết hàm loadUserByUsername
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
@@ -63,7 +64,9 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         ResLoginDTO res = new ResLoginDTO();
-        User currentUserDB = this.userService.handleGetUserByUsername(loginDTO.getUsername());
+
+        User currentUserDB = this.userService.handleGetUserByUsername(loginDTO.getEmail());
+        
         if (currentUserDB != null) {
             ResLoginDTO.UserLogin userLogin = new ResLoginDTO.UserLogin(
                     currentUserDB.getId(),
@@ -78,10 +81,10 @@ public class AuthController {
         res.setAccessToken(access_token);
 
         // create refresh token
-        String refresh_token = this.securityUtil.createRefreshToken(loginDTO.getUsername(), res);
+        String refresh_token = this.securityUtil.createRefreshToken(loginDTO.getEmail(), res);
 
         // update user
-        this.userService.updateUserToken(refresh_token, loginDTO.getUsername());
+        this.userService.updateUserToken(refresh_token, loginDTO.getEmail());
 
         // set cookies
         ResponseCookie resCookies = ResponseCookie
@@ -104,7 +107,7 @@ public class AuthController {
         String email = SecurityUtil.getCurrentUserLogin().isPresent()
                 ? SecurityUtil.getCurrentUserLogin().get()
                 : "";
-    
+
         // từ email đó thì lấy ra user login
         User currentUserDB = this.userService.handleGetUserByUsername(email);
 

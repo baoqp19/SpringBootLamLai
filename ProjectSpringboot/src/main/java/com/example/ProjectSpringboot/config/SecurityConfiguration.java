@@ -51,8 +51,9 @@ public class SecurityConfiguration {
         };
         http
                 .csrf(c -> c.disable())
-                .cors(Customizer.withDefaults()) // cấu hình mặc đinh cors, và thêm filter bên CorsConfig để chèn filter
-                                                 // vào
+
+                .cors(Customizer.withDefaults())  // Client có thể gọi (React, Angular) 
+
                 .authorizeHttpRequests(
                         authz -> authz
                                 .requestMatchers(whiteList).permitAll()
@@ -72,6 +73,7 @@ public class SecurityConfiguration {
                 // .accessDeniedHandler(new BearerTokenAccessDeniedHandler())) // 403
 
                 .formLogin(f -> f.disable())
+                
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         return http.build();
     }

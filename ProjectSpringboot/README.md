@@ -26,11 +26,20 @@
 - Build docker image từ dockerfile : 
     ```text
     docker build -t <tên-image>:<tag> <đường-dẫn-tới-Dockerfile>
+
+    docker build: build image
+    -t project-springboot: đặt tên image
+
+    .: dùng Dockerfile trong thư mục hiện tại
+    
+    docker build -t project-springboot .
+
     ```
 
 - Run docker container từ image:  
     ```text
     docker run -d -p 8080:80 <ten-image>
+
     ```
 
 - Build từ docker-compose and run application:   

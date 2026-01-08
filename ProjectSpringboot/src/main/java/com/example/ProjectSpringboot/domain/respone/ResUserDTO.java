@@ -31,6 +31,7 @@ public class ResUserDTO {
     private Instant createdAt;
 
     private CompanyUser company;
+
     @Getter
     @Setter
     @AllArgsConstructor
@@ -39,7 +40,5 @@ public class ResUserDTO {
         private long id;
         private String name;
     }
-    
-
 
 }

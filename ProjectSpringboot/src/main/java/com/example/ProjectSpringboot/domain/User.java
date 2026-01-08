@@ -17,6 +17,7 @@ import lombok.Setter;
 @Setter
 @Table(name = "users")
 public class User {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -45,12 +46,13 @@ public class User {
     private String updatedBy;
 
     // bên user có cột company_id tượng trưng cho company ở bảng uuser
-
+    // fetch = FetchType.LAZY: Nếu không gọi thì là null , Nếu có thì gọi mới có nếu
+    // không gọi thì coi như trường này chưa có
     @ManyToOne
     @JoinColumn(name = "company_id")
     private Company company;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY) // không gọi thì null
     @JsonIgnore
     List<Resume> resumes;
 
@@ -74,8 +76,5 @@ public class User {
                 : "";
         this.updatedAt = Instant.now();
     }
-
-    
-
 
 }

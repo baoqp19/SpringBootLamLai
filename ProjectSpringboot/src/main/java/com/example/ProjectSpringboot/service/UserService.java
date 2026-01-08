@@ -51,6 +51,8 @@ public class UserService {
     }
 
     public ResultPaginationDTO fetchAllUser(Specification<User> spec, Pageable pageable) {
+
+        // Specification:
         Page<User> pageUser = this.userRepository.findAll(spec, pageable);
 
         ResultPaginationDTO rs = new ResultPaginationDTO();
@@ -135,6 +137,7 @@ public class UserService {
     }
 
     public ResUpdateUserDTO convertToResUpdateUserDTO(User user) {
+
         ResUpdateUserDTO res = new ResUpdateUserDTO();
 
         ResUpdateUserDTO.CompanyUser com = new ResUpdateUserDTO.CompanyUser();
@@ -172,6 +175,7 @@ public class UserService {
         res.setCreatedAt(user.getCreatedAt());
         res.setGender(user.getGender());
         res.setAddress(user.getAddress());
+        
         return res;
     }
 

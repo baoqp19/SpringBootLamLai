@@ -16,6 +16,7 @@ import com.example.ProjectSpringboot.repository.UserRepository;
 
 @Service
 public class CompanyService {
+
     private final CompanyRepository companyRepository;
     private final UserRepository userRepository;
 
@@ -29,6 +30,8 @@ public class CompanyService {
     }
 
     public ResultPaginationDTO handleGetCompany(Specification<Company> spec, Pageable pageable) {
+
+        // FindAll là tìm cả company và có cả spec, pageable
         Page<Company> pCompany = this.companyRepository.findAll(spec, pageable);
 
         ResultPaginationDTO rs = new ResultPaginationDTO();
@@ -60,19 +63,23 @@ public class CompanyService {
     }
 
     public void handleDeleteCompany(long id) {
+
         // xóa công ty thì xóa user trước rồi mới xóa company
         Optional<Company> comOptional = this.companyRepository.findById(id);
+        
         if (comOptional.isPresent()) {
             Company com = comOptional.get();
             // fetch all user belong to this company
             List<User> users = this.userRepository.findByCompany(com);
-            this.userRepository.deleteAll(users);
+            this.userRepository.deleteAll(users); // deleteAll nữa ạ
         }
 
         this.companyRepository.deleteById(id);
     }
 
+
     public Optional<Company> findById(long id) {
         return this.companyRepository.findById(id);
     }
+
 }
