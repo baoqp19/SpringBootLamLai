@@ -103,3 +103,14 @@
     docker rmi <name_docker_image>
     docker rm <name_docker_container>
 ```
+
+- đẩy lên docker hub  
+```text
+    docker login 
+
+    docker tag projectspringboot-spring-boot-app baoqp19/  projectspringboot-spring-boot-app:1.0
+
+    docker images
+
+    docker push baoqp19/projectspringboot-spring-boot-app:1.0
+```
